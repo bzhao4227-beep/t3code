@@ -39,12 +39,12 @@ git rebase main
 - 上游的结构为准，再把我们的意图重新落上去。不要为了保住我们的写法去回滚上游的改动。
 - `AGENTS.md` 冲突：保留上游全文，再把文件末尾的「Fork 层」小节原样接回去。
 - 上游新增的迁移编号和我们用过的编号重叠，或者某个定制已被上游原生实现：停下来告诉开发者，并给出建议（drop 这个定制，还是改写）。
-- `pnpm-lock.yaml` 冲突：取上游版本，rebase 完成后重新跑 `vp i`。
+- `pnpm-lock.yaml` 冲突：先协调当前提交涉及的包清单、工作区配置及补丁。核对 `git show REBASE_HEAD -- pnpm-lock.yaml` 中定制引入的依赖解析变化，在已重放的锁文件基础上保留这些变化，包括仅修改锁文件的升级。解决冲突标记后运行 `vp i --lockfile-only`，核对生成的差异，将锁文件与相关改动一并暂存，再执行 `git rebase --continue`。
 
 ## 4. 验证
 
 ```sh
-vp i
+vp i --frozen-lockfile
 vp run check:changed main         # 只检查定制提交相对 main 的部分
 ```
 
@@ -53,5 +53,5 @@ vp run check:changed main         # 只检查定制提交相对 main 的部分
 ## 5. 收尾
 
 - 在 FORK.md 的「同步记录」里加一行：日期 + `git rev-parse --short main`。如果某个定制被改写或 drop 了，同步更新定制清单。
-- 推送需要开发者明确同意。`main` 正常 push 即可；rebase 后的 `custom` 需要 `git push --force-with-lease origin custom`，属于强推，**必须先征得同意**。
+- 推送需要开发者明确同意。`main` 跟踪 `upstream/main`，用 `git config --local branch.main.pushRemote origin` 设置本地推送目标；获准后用 `git push origin main` 更新个人 fork；rebase 后的 `custom` 需要 `git push --force-with-lease origin custom`，属于强推，**必须先征得同意**。
 - 向开发者汇报：吃进了多少上游提交、解了哪些冲突、哪些定制有变化、验证结果如何。

@@ -26,7 +26,9 @@ git switch -c feat/<name>
 
 遵守上游 AGENTS.md 的 Taste 规则：Effect service + `Effect.fn`、不用 `any`、默认不写注释、React effect 要写明理由。迭代时用 `vp test run <files>` 和 `vp run --filter <pkg> typecheck`。
 
-## 4. 验证
+## 4. 提交并验证
+
+在功能分支更新 FORK.md 的「定制清单」。按路径暂存本次实现、测试和清单，检查 `git diff --cached` 后用英文 conventional commit 提交。确认 `git status --short` 输出为空，再验证已提交的功能。
 
 ```sh
 vp run check:changed custom      # 只检查这个分支相对 custom 的改动
@@ -42,4 +44,4 @@ git merge --squash feat/<name>
 git commit -m "feat(fork): <plain-language summary>"
 ```
 
-在同一个提交里更新 FORK.md 的「定制清单」：功能、改动的上游文件、新增文件、备注。提交信息用英文 conventional commit，和上游保持一致。推送到 `origin` 需要开发者明确同意。
+用 `git diff --stat HEAD^ HEAD` 核对合入的实现和清单，再运行 `vp run check:changed main` 检查集成结果。推送到 `origin` 需要开发者明确同意。
