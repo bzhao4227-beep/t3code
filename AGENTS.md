@@ -155,3 +155,15 @@ Read the matching doc before changing code in that area; code review enforces th
 - No continuously repainting animations; they peg the GPU on high-refresh displays.
 - Security matters, but do not over-index on dev-mode or maintainer-only features. Read [SECURITY.md](SECURITY.md) before auditing or triaging reports.
 - If a rule here fights the task in front of you, say so loudly and get a human sign-off before breaking it.
+
+## Fork 层
+
+本仓库是 pingdotgg/t3code 的个人 fork，用于自用定制（主要面向 macOS 桌面端）。上面的上游规则全部继续有效；以下是追加约定，与上游冲突时以这里为准，并告知开发者。
+
+- 与开发者沟通用简体中文；代码、代码注释、提交信息保持英文，与上游一致。
+- 分支：`main` 只镜像 `upstream/main`，不在上面提交；定制从 `custom` 切 `feat/<name>`，完成后 squash 合回 `custom`；回馈上游的修复从 `upstream/main` 切 `fix/<name>`。
+- 动手前读 [FORK.md](FORK.md)：定制清单、高风险区（数据库迁移编号、`packages/contracts`）、数据安全。
+- 新增定制用 `fork-feature` skill，同步上游用 `fork-sync` skill（都在 `.agents/skills/`）。
+- 定制默认只需覆盖桌面端（server + Web UI）；其他端可以明确不支持，但不能被弄坏。
+- 不修改本节以上的上游内容；fork 规则只写在本节或 FORK.md。
+- 推送、强推，以及在上游开 PR/issue，只在开发者明确要求时执行。
